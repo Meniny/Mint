@@ -2,7 +2,7 @@
 :author: Elias Abel
 :author_esc: Elias%20Abel
 :mail: admin@meniny.cn
-:desc: a hunan readable HTTP request library in Swift
+:desc: a human readable HTTP request library in Swift
 :icon: {name}.png
 :version: 1.0.0
 :na: N/A
