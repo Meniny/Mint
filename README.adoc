@@ -16,7 +16,7 @@
 :license: MIT
 :sep: %20%7C%20
 :platform: iOS{sep}macOS{sep}watchOS{sep}tvOS
-:toc: right
+// :toc: right
 :source-highlighter: highlightjs
 = Meet `{name}`
 {author} <{mail}>
