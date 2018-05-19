@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name        = 'Mint'
   s.module_name = 'Mint'
   s.version     = '1.0.0'
-  s.summary     = 'A hunan readable HTTP request library in Swift.'
+  s.summary     = 'A human readable HTTP request library in Swift.'
   s.description  = <<-EOS
 Mint is a hunan readable HTTP request library in Swift.
 EOS
