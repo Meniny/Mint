@@ -23,7 +23,7 @@ EOS
   s.source_files        = 'Mint/**/*.swift'
   s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.1' }
   s.swift_version       = '4.1'
-  s.documentation_url   = s.homepage.to_s + '/docs'
+  # s.documentation_url   = s.homepage.to_s + '/docs'
 
   # s.dependency "Jsonify"
 
