@@ -1,0 +1,18 @@
+PODS:
+  - Mint (1.0.0):
+    - Mint/Core (= 1.0.0)
+  - Mint/Core (1.0.0)
+
+DEPENDENCIES:
+  - Mint (from `../`)
+
+EXTERNAL SOURCES:
+  Mint:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Mint: a66b32087a11264284363ec13f268c5f73812ce6
+
+PODFILE CHECKSUM: 5382d7b2cb5c75e291ee20dd292425372b0131a3
+
+COCOAPODS: 1.5.2
