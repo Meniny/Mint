@@ -98,7 +98,7 @@ import {name}
 
 let mint = Mint.init(baseURL: "https://meniny.cn/api/v2/")
 
-self.mint.get("posts.json") { (result) in
+mint.get("posts.json") { (result) in
     switch result {
     case .success(let response):
         print(response.dictionaryBody)
@@ -114,7 +114,7 @@ import {name}
 
 let downloader = Mint.init(baseURL: "https://meniny.cn/assets/images/")
 
-self.downloader.downloadImage("fire.jpg") { (result) in
+downloader.downloadImage("fire.jpg") { (result) in
     print("Done.")
     switch result {
     case .success(let resp):
