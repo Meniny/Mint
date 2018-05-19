@@ -33,9 +33,7 @@ struct TestCheck {
         if TestCheck.isTesting && disabled == false {
             block()
         } else {
-            DispatchQueue.main.async {
-                block()
-            }
+            DispatchQueue.main.async(execute: block)
         }
     }
 }

@@ -29,10 +29,37 @@ public extension Int {
 open class Mint {
     open static let domain = "cn.meniny.mint"
 
-    public enum Method: String, Equatable, Codable {
-        case get = "GET", post = "POST", put = "PUT", patch = "PATCH", delete = "DELETE"
-    }
+//    public enum Method: String, Equatable, Codable {
+//        case get = "GET", post = "POST", put = "PUT", patch = "PATCH", delete = "DELETE"
+//    }
 
+    public enum Method: String, Equatable, Codable {
+        case `get` = "GET"
+        case post = "POST"
+        case put = "PUT"
+        case delete = "DELETE"
+        case patch = "PATCH"
+        case update = "UPDATE"
+        case head = "HEAD"
+        case trace = "TRACE"
+        case options = "OPTIONS"
+        case connect = "CONNECT"
+        case search = "SEARCH"
+        case copy = "COPY"
+        case merge = "MERGE"
+        case label = "LABEL"
+        case lock = "LOCK"
+        case unlock = "UNLOCK"
+        case move = "MOVE"
+        case mkcol = "MKCOL"
+        case propfind = "PROPFIND"
+        case proppatch = "PROPPATCH"
+        
+        public var string: String {
+            return self.rawValue
+        }
+    }
+    
     public enum TaskType: String, Equatable, Codable {
         case data, upload, download
     }
@@ -44,36 +71,25 @@ open class Mint {
     /// - formURLEncoded: Serializes your parameters using `Percent-encoding` and sets your `Content-Type` to `application/x-www-form-urlencoded`.
     /// - multipartFormData: Serializes your parameters and parts as multipart and sets your `Content-Type` to `multipart/form-data`.
     /// - custom: Sends your parameters as plain data, sets your `Content-Type` to the value inside `custom`.
-    public enum ParameterType: Equatable {
-        case none, json, formURLEncoded, multipartFormData, custom(String)
+    public enum Parameter {
+        case none
+        case json(Any)
+        case formURLEncoded([String: Any])
+        case multipartFormData([FormDataPart])
+        case custom(Data, ContentType)
 
-        func contentType(_ boundary: String) -> String? {
+        func contentType(_ boundary: String) -> Mint.ContentType? {
             switch self {
             case .none:
                 return nil
             case .json:
-                return "application/json"
+                return .json
             case .formURLEncoded:
-                return "application/x-www-form-urlencoded"
+                return .formURL
             case .multipartFormData:
-                return "multipart/form-data; boundary=\(boundary)"
-            case let .custom(value):
-                return value
-            }
-        }
-    }
-
-    public enum ResponseType: String, Equatable, Codable {
-        case json
-        case data
-        case image
-
-        public var accept: String? {
-            switch self {
-            case .json:
-                return "application/json"
-            default:
-                return nil
+                return .custom("multipart/form-data; boundary=\(boundary)")
+            case let .custom(_, ct):
+                return ct
             }
         }
     }
@@ -92,12 +108,10 @@ open class Mint {
     }
 
     fileprivate let baseURL: String
-    var fakeRequests = [Method: [String: FakeRequest]]()
     var token: String?
     var authorizationHeaderValue: String?
     var authorizationHeaderKey = "Authorization"
     fileprivate var configuration: URLSessionConfiguration
-    var cache: NSCache<AnyObject, AnyObject>
 
     /// Flag used to indicate synchronous request.
     public var isSynchronous = false
@@ -112,23 +126,14 @@ open class Mint {
         URLSession(configuration: self.configuration)
     }()
 
-    /// Caching options
-    public enum CachingLevel: String, Equatable, Codable {
-        case memory
-        case memoryAndFile
-        case none
-    }
-
     /// Base initializer, it creates an instance of `Mint`.
     ///
     /// - Parameters:
     ///   - baseURL: The base URL for HTTP requests under `Mint`.
     ///   - configuration: The URLSessionConfiguration configuration to be used
-    ///   - cache: The NSCache to use, it has a built-in default one.
-    public init(baseURL: String, configuration: URLSessionConfiguration = .default, cache: NSCache<AnyObject, AnyObject>? = nil) {
+    public init(baseURL: String, configuration: URLSessionConfiguration = .default) {
         self.baseURL = baseURL
         self.configuration = configuration
-        self.cache = cache ?? NSCache()
     }
 
     /// Authenticates using Basic Authentication, it converts username:password to Base64 then sets the Authorization header to "Basic \(Base64(username:password))".
@@ -183,52 +188,6 @@ open class Mint {
         return url
     }
 
-    /// Returns the URL used to store a resource for a certain path. Useful to find where a download image is located.
-    ///
-    /// - Parameters:
-    ///   - path: The path used to download the resource.
-    ///   - cacheName: The alias to be used for storing the resource, if a cache name is provided, this will be used instead of the path.
-    /// - Returns: A URL where a resource has been stored.
-    /// - Throws: An error if the URL couldn't be created.
-    public func destinationURL(for path: String, cacheName: String? = nil) throws -> URL {
-        let normalizedCacheName = cacheName?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        var resourcesPath: String
-        if let normalizedCacheName = normalizedCacheName {
-            resourcesPath = normalizedCacheName
-        } else {
-            let url = try composedURL(with: path)
-            resourcesPath = url.absoluteString
-        }
-
-        let normalizedResourcesPath = resourcesPath.replacingOccurrences(of: "/", with: "-")
-        let folderPath = Mint.domain
-        let finalPath = "\(folderPath)/\(normalizedResourcesPath)"
-
-        if let url = URL(string: finalPath) {
-            #if os(tvOS)
-                let directory = FileManager.SearchPathDirectory.cachesDirectory
-            #else
-                let directory = TestCheck.isTesting ? FileManager.SearchPathDirectory.cachesDirectory : FileManager.SearchPathDirectory.documentDirectory
-            #endif
-            if let cachesURL = FileManager.default.urls(for: directory, in: .userDomainMask).first {
-                try (cachesURL as NSURL).setResourceValue(true, forKey: URLResourceKey.isExcludedFromBackupKey)
-                let folderURL = cachesURL.appendingPathComponent(URL(string: folderPath)!.absoluteString)
-
-                if FileManager.default.exists(at: folderURL) == false {
-                    try FileManager.default.createDirectory(at: folderURL, withIntermediateDirectories: false, attributes: nil)
-                }
-
-                let destinationURL = cachesURL.appendingPathComponent(url.absoluteString)
-
-                return destinationURL
-            } else {
-                throw NSError(domain: Mint.domain, code: 9999, userInfo: [NSLocalizedDescriptionKey: "Couldn't normalize url"])
-            }
-        } else {
-            throw NSError(domain: Mint.domain, code: 9999, userInfo: [NSLocalizedDescriptionKey: "Couldn't create a url using replacedPath: \(finalPath)"])
-        }
-    }
-
     /// Splits a url in base url and relative path.
     ///
     /// - ParameterType path: The full url to be splitted.
@@ -247,7 +206,7 @@ open class Mint {
     /// Cancels the request that matches the requestID.
     ///
     /// - ParameterType requestID: The ID of the request to be cancelled.
-    public func cancel(_ requestID: String) {
+    public func cancel(_ requestID: Mint.RequestID) {
         let semaphore = DispatchSemaphore(value: 0)
         session.getTasksWithCompletionHandler { dataTasks, uploadTasks, downloadTasks in
             var tasks = [URLSessionTask]()
@@ -306,8 +265,6 @@ open class Mint {
 
     /// Removes the stored credentials and cached data.
     public func reset() {
-        cache.removeAllObjects()
-        fakeRequests.removeAll()
         token = nil
         headerFields = nil
         authorizationHeaderKey = "Authorization"

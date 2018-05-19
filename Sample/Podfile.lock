@@ -1,7 +1,7 @@
 PODS:
-  - Mint (1.0.0):
-    - Mint/Core (= 1.0.0)
-  - Mint/Core (1.0.0)
+  - Mint (2.0.0):
+    - Mint/Core (= 2.0.0)
+  - Mint/Core (2.0.0)
 
 DEPENDENCIES:
   - Mint (from `../`)
@@ -11,8 +11,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Mint: a66b32087a11264284363ec13f268c5f73812ce6
+  Mint: 3f6c87eeffee5158606723e310256a349470282b
 
-PODFILE CHECKSUM: 5382d7b2cb5c75e291ee20dd292425372b0131a3
+PODFILE CHECKSUM: 44bcdd8bcbea8bde9e895f8dd3667cd8946dd8d1
 
 COCOAPODS: 1.5.2

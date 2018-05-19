@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name        = 'Mint'
   s.module_name = 'Mint'
-  s.version     = '1.0.0'
+  s.version     = '2.0.0'
   s.summary     = 'A human readable HTTP request library in Swift.'
   s.description  = <<-EOS
 Mint is a hunan readable HTTP request library in Swift.
@@ -20,10 +20,9 @@ EOS
 
   s.requires_arc        = true
   s.source              = { git: 'https://github.com/Meniny/Mint.git', tag: s.version.to_s }
-  s.source_files        = 'Mint/**/*.swift'
+
   s.pod_target_xcconfig = { 'SWIFT_VERSION' => '4.1' }
   s.swift_version       = '4.1'
-  # s.documentation_url   = s.homepage.to_s + '/docs'
 
   # s.dependency "Jsonify"
 
@@ -32,4 +31,5 @@ EOS
   s.subspec 'Core' do |sp|
     sp.source_files  = 'Mint/Core/**/*.swift'
   end
+
 end

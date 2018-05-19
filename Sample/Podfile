@@ -3,5 +3,7 @@ platform :ios, '9.0'
 target 'Sample' do
   use_frameworks!
 
+#  pod 'Mint/Fakeable', :path => '../'
   pod 'Mint', :path => '../'
+#  pod 'Mint/Fakeable', :path => '../'
 end

@@ -26,7 +26,7 @@
 		5C9D544320B02F0D004BC792 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5C9D544520B02F0D004BC792 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5C9D544B20B03299004BC792 /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
-		5C9D544D20B03390004BC792 /* Mint.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = Mint.podspec; path = ../Mint.podspec; sourceTree = "<group>"; };
+		5C9D544D20B03390004BC792 /* Mint.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; name = Mint.podspec; path = ../Mint.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		5C9D544E20B03390004BC792 /* README.adoc */ = {isa = PBXFileReference; lastKnownFileType = text; name = README.adoc; path = ../README.adoc; sourceTree = "<group>"; };
 		5C9D544F20B03390004BC792 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; name = .gitignore; path = ../.gitignore; sourceTree = "<group>"; };
 		5C9D545020B03390004BC792 /* _config.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = _config.yml; path = ../_config.yml; sourceTree = "<group>"; };

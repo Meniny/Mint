@@ -70,16 +70,24 @@ extension FileManager {
 }
 
 extension URLRequest {
-    init(url: URL, requestType: Mint.Method, path _: String, parameterType: Mint.ParameterType?, responseType: Mint.ResponseType, boundary: String, authorizationHeaderValue: String?, token: String?, authorizationHeaderKey: String, headerFields: [String: String]?) {
+    init(url: URL,
+         method: Mint.Method,
+         contentType: Mint.ContentType?,
+         accept: Mint.ContentType?,
+         authorizationHeaderValue: String?,
+         token: String?,
+         authorizationHeaderKey: String,
+         headerFields: [String: String]?) {
+        
         self = URLRequest(url: url)
-        httpMethod = requestType.rawValue
+        httpMethod = method.rawValue
 
-        if let parameterType = parameterType, let contentType = parameterType.contentType(boundary) {
-            addValue(contentType, forHTTPHeaderField: "Content-Type")
+        if let contentType = contentType {
+            addValue(contentType.rawValue, forHTTPHeaderField: Mint.HeaderFieldKey.contentType.stringValue)
         }
 
-        if let accept = responseType.accept {
-            addValue(accept, forHTTPHeaderField: "Accept")
+        if let accept = accept {
+            addValue(accept.rawValue, forHTTPHeaderField: Mint.HeaderFieldKey.accept.stringValue)
         }
 
         if let authorizationHeader = authorizationHeaderValue {
@@ -108,11 +116,5 @@ extension URL {
 extension HTTPURLResponse {
     convenience init(url: URL, statusCode: Int) {
         self.init(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-    }
-}
-
-extension NSError {
-    convenience init(fakeRequest: FakeRequest) {
-        self.init(domain: Mint.domain, code: fakeRequest.statusCode, userInfo: [NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: fakeRequest.statusCode)])
     }
 }
